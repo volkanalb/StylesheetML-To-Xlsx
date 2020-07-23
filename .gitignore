@@ -1,6 +1,12 @@
 # Compiled class file
 *.class
 
+#eclispe
+*.settings
+target
+.classpath
+.project
+
 # Log file
 *.log
 
