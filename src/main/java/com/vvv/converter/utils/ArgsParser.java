@@ -15,13 +15,13 @@ public class ArgsParser {
 	DestinationFile destinationFile;
 
 	public ArgsParser(String[] args) throws ArgsNotFoundException, ArgsNotValidException,
-			SourceFileAccessRightException, SourceFileDoesNotExistsException, DestinationFileAccessRightException {
+			SourceFileAccessRightException, SourceFileDoesNotExistsException {
 		this.args = args;
 		parse();
 	}
 
 	private void parse() throws ArgsNotFoundException, ArgsNotValidException, SourceFileAccessRightException,
-			SourceFileDoesNotExistsException, DestinationFileAccessRightException {
+			SourceFileDoesNotExistsException {
 		if (args == null) {
 			throw new ArgsNotFoundException("Args not found!");
 		} else if (args.length != 2) {

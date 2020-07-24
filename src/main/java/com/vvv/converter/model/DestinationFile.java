@@ -9,7 +9,7 @@ public class DestinationFile {
 	public DestinationFile(String fileName) {
 		this.fileName = fileName;
 		this.file = new File(this.fileName);
-
+		// TODO Access rights should be checked
 		if (this.file.exists()) {
 			System.out.println("Old file deleted : " + fileName);
 			this.file.delete();

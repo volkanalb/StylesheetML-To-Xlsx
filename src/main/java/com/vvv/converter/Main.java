@@ -46,9 +46,6 @@ public class Main {
 			ExcelReader er = new ExcelReader();
 			Workbook workbook = er.getWorkbook(argsParser.getSourceFile().getFile().getPath());
 			XSSFWorkbook outWorkbook = new XSSFWorkbook();
-			CreationHelper createHelper = outWorkbook.getCreationHelper();
-			CellStyle cellDateStyle = outWorkbook.createCellStyle();
-			cellDateStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy"));
 
 			for (Worksheet sheet : workbook.getWorksheets()) {
 				XSSFSheet outSheet = outWorkbook.createSheet(sheet.getName());
@@ -67,12 +64,13 @@ public class Main {
 								} else if (cell.getXLDataType().equals(SSCell.DATATYPE_NUMBER)) {
 									outCell.setCellValue(cell.doubleValue());
 								} else if (cell.getXLDataType().equals(SSCell.DATATYPE_DATE_TIME)) {
-									outCell.setCellStyle(cellDateStyle);
+									outCell.setCellStyle(getDateCellTyle(outWorkbook));
 									outCell.setCellValue((Date) cell.getData());
 								} else {
 									outCell.setCellValue(cell.getData$());
 								}
 							} else {
+								// TODO I couldn't find a way to convert R1C1 style formula to A1 style
 								System.out.println("Reference file has formula. Only value has been written. Formula : "
 										+ cell.getFormula());
 								outCell.setCellValue(cell.getData$());
@@ -99,7 +97,7 @@ public class Main {
 
 			printHelp = false;
 		} catch (ArgsNotFoundException | ArgsNotValidException | SourceFileAccessRightException
-				| SourceFileDoesNotExistsException | DestinationFileAccessRightException e) {
+				| SourceFileDoesNotExistsException  e) {
 			System.out.println(e.getMessage() + ": " + ((IParameter) e).getParameter());
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
@@ -115,6 +113,13 @@ public class Main {
 				printHelp();
 			}
 		}
+	}
+
+	private static CellStyle getDateCellTyle(XSSFWorkbook outWorkbook) {
+		CreationHelper createHelper = outWorkbook.getCreationHelper();
+		CellStyle cellDateStyle = outWorkbook.createCellStyle();
+		cellDateStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy"));
+		return cellDateStyle;
 	}
 
 	private static Map<String, CellInfo> getCellTypeMap() {
